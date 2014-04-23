@@ -1,0 +1,28 @@
+#!/bin/sh
+
+TARGETDIR=$1
+BASENAME=
+if [ ! -d ${TARGETDIR} ];then
+ if [ -f ${TARGETDIR} ];then
+  echo "specify directory path." > 2
+  exit 1
+ fi
+ TARGETDIR=`echo $1 | sed -e 's/\/$//' | sed -e 's/[^\/]*$//'`
+ if [ "${TARGETDIR}" = "" ];then
+  TARGETDIR=`pwd`
+ fi
+ if [ ! -d ${TARGETDIR} ];then
+  echo "specify directory path." > 2
+  exit 1
+ fi
+ BASENAME=`basename $1`
+fi
+
+pushd ${TARGETDIR} > /dev/null
+WINDIR=`pwd -W`
+popd > /dev/null
+
+WINDIR=${WINDIR}/${BASENAME}
+
+echo $WINDIR | sed -e 's/\//\\/g'
+exit 0

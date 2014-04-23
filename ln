@@ -20,6 +20,7 @@ EOT
 # Description:
 #   mklinkを実行する
 exec_mklink() {
+    echo 1=$1,2=$2
     local D=''
     [ -d "$1" ] && D=/D
 
@@ -40,8 +41,14 @@ exec_mklink() {
         rm "$target_file"
     fi
 
-    cmd /c mklink $D $H "`cygpath -w \"$target_file\"`" "`cygpath -w \"$1\"`"
+    TARGET_PATH=`winpath "$1"`
+    LINK_PATH=`winpath \"${target_file}\"`
+    echo TargetPath=${TARGET_PATH},LinkPath=${LINK_PATH}
+    MKLINK_CMD=`echo mklink $D $H "${LINK_PATH}" "${TARGET_PATH}"`
+    echo cmd /c "${MKLINK_CMD}"
+	    cmd /c "${MKLINK_CMD}"
 }
+
 
 [ "$1" = '-h' -o "$1" = '--help' ] && usage && exit 1
 
